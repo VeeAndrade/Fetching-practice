@@ -1,26 +1,36 @@
-import React from 'react';
+import React, { Component }from 'react';
 import logo from './logo.svg';
 import './App.css';
+import Form from './Form';
+import Animal from './Animal';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+      animals: ''
+    };
+  }
+
+  componentDidMount() {
+    return fetch('http://localhost:3001/api/v1/animals')
+      .then(response => response.json())
+      .then(data => this.setState({animals: data}))
+  }
+
+  render () {
+    if(this.state.animals === '') {
+      return <h2>Loading...</h2>
+    } else {
+      return (
+        <section>
+          <h1>Animals</h1>
+          <Form />
+          {this.state.animals.map(animal => <Animal {...animal}/>)}
+        </section>
+      )
+    }
+  };
 }
 
 export default App;
